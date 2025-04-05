@@ -47,4 +47,4 @@ Electron powers many popular applications including Visual Studio Code, Slack, D
 
 ## License
 
-[MIT](LICENSE) (You can add a LICENSE file if you wish) 
+[MIT](LICENSE)

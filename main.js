@@ -1,7 +1,24 @@
+/*
+ * Electron Application Main Process
+ * -------------------------------
+ * This is the main entry point for an Electron application. Electron uses a main process
+ * (this file) and renderer processes (for each window) to create desktop applications.
+ * The main process handles creating windows, application lifecycle, and native features.
+ */
+
+// Import required Electron modules - app controls application lifecycle,
+// BrowserWindow is used to create and manage application windows
 const { app, BrowserWindow } = require('electron')
 
+/*
+ * Window Creation
+ * --------------
+ * This function creates a new application window with specific configurations.
+ * Each window runs in its own renderer process.
+ */
 function createWindow () {
-  // Create the browser window.
+  // Create a new browser window instance with specific dimensions
+  // nodeIntegration allows renderer process to access Node.js features
   const win = new BrowserWindow({
     width: 800,
     height: 600,
@@ -10,34 +27,56 @@ function createWindow () {
     }
   })
 
-  // and load the index.html of the app.
+  // Load the main HTML file into the window
+  // This HTML file is the entry point for the renderer process
   win.loadFile('index.html')
 
-  // Open the DevTools.
+  // Developer tools can be enabled for debugging
+  // Commented out by default
   // win.webContents.openDevTools()
 }
 
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
+/*
+ * Application Lifecycle
+ * -------------------
+ * Electron uses several events to manage the application's lifecycle
+ */
+
+// 'whenReady' fires when Electron is initialized and ready to create windows
+// This is the first point where we can create browser windows
 app.whenReady().then(createWindow)
 
-// Quit when all windows are closed, except on macOS. There, it's common
-// for applications and their menu bar to stay active until the user quits
-// explicitly with Cmd + Q.
+/*
+ * Platform-Specific Behavior
+ * ------------------------
+ * Different operating systems have different conventions for window management
+ */
+
+// Handle window closing behavior
+// Special case for macOS where applications stay active even with no windows
 app.on('window-all-closed', () => {
+  // Quit the application on all platforms except macOS
   if (process.platform !== 'darwin') {
     app.quit()
   }
 })
 
+// Handle application activation
+// On macOS, it's common to re-create windows when the dock icon is clicked
 app.on('activate', () => {
-  // On macOS it's common to re-create a window in the app when the
-  // dock icon is clicked and there are no other windows open.
+  // Create a new window if none exists when the app is activated
+  // This is macOS-specific behavior
   if (BrowserWindow.getAllWindows().length === 0) {
     createWindow()
   }
 })
 
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and require them here. 
+/*
+ * Additional Application Logic
+ * --------------------------
+ * The main process can include additional code for:
+ * - Inter-process communication (IPC)
+ * - System tray integration
+ * - Native menus
+ * - Other OS-level integrations
+ */
